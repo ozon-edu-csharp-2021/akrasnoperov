@@ -12,6 +12,10 @@ ProjectSection(SolutionItems) = preProject
 	README.md = README.md
 	.gitignore = .gitignore
 	.editorconfig = .editorconfig
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{2789580E-C191-4E80-A906-30F93F498CAF}"
+ProjectSection(SolutionItems) = preProject
 	docker-compose.yml = docker-compose.yml
 EndProjectSection
 EndProject
