@@ -1,11 +1,11 @@
 ﻿# OzonEdu.MerchandiseService
-Проект предназначен для выдачи мерча сотрудникам компании.
+Проект предназначен для учета выдачи мерча сотрудникам.
 
 Состоит из:
 - OzonEdu.MerchandiseService — проект с основным asp.net core сервисом.
 
 Зависит от:
-- supply-service - ;
-- emailing-service - ;
-- employees-service - ;
-- stock-api - .
+- supply-service - сервис поставок;
+- emailing-service - сервис отправки электронной почты;
+- employees-service - сервис сотрудников;
+- stock-api - сервис отвечающий за остатки мерча на складе.
