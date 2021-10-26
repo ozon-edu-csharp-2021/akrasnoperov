@@ -23,7 +23,7 @@ namespace OzonEdu.MerchandiseService.Controllers.V1
 		/// <param name="token"><see cref="CancellationToken"/>.</param>
 		[HttpPost("{merchId:int}/users/{userId:int}")]
 		[ProducesResponseType(204)]
-		[ProducesResponseType(404)]
+		[ProducesResponseType(400)]
 		[ProducesResponseType(404)]
 		public Task<IActionResult> IssueMerchAsync(
 			[FromRoute] int merchId,
