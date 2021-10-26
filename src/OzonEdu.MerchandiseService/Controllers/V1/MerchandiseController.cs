@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -41,7 +40,7 @@ namespace OzonEdu.MerchandiseService.Controllers.V1
 		/// <param name="token"><see cref="CancellationToken"/>.</param>
 		/// <returns>Список <see cref="IssuedMerch"/></returns>
 		[HttpGet("users/{userId:int}")]
-		[ProducesResponseType(typeof(IList<IssuedMerch>), 200)]
+		[ProducesResponseType(typeof(IssuedMerchResponse), 200)]
 		[ProducesResponseType(404)]
 		public Task<IActionResult> GetIssuedMerchAsync(
 			[FromRoute] int userId,

@@ -36,7 +36,6 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Middlewares
 		/// <param name="context"></param>
 		public async Task InvokeAsync(HttpContext context)
 		{
-			// TODO: Исключить Grpc-запросы.
 			await LogRequestAsync(context);
 			await _next(context);
 			await LogResponse(context);
@@ -46,11 +45,14 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Middlewares
 		{
 			try
 			{
-				_logger.LogInformation(
-					"Request {HttpMethod} {Route}, with headers {Headers}",
-					GetHttpMethod(context),
-					GetRoute(context),
-					GetHeaders(context.Request?.Headers));
+				if (!IsGrpc(context))
+				{
+					_logger.LogInformation(
+						"Request {HttpMethod} {Route}, with headers {Headers}",
+						GetHttpMethod(context),
+						GetRoute(context),
+						GetHeaders(context.Request?.Headers));
+				}
 			}
 			catch (Exception e)
 			{
@@ -64,14 +66,17 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Middlewares
 		{
 			try
 			{
-				var httpStatusCode = context.Response?.StatusCode;
+				if (!IsGrpc(context))
+				{
+					var httpStatusCode = context.Response?.StatusCode;
 
-				_logger.LogInformation(
-					"{HttpMethod} {Route} responsed {HttpStatusCode}, with headers {Headers}",
-					GetHttpMethod(context),
-					GetRoute(context),
-					httpStatusCode,
-					GetHeaders(context.Response?.Headers));
+					_logger.LogInformation(
+						"{HttpMethod} {Route} responsed {HttpStatusCode}, with headers {Headers}",
+						GetHttpMethod(context),
+						GetRoute(context),
+						httpStatusCode,
+						GetHeaders(context.Response?.Headers));
+				}
 			}
 			catch (Exception e)
 			{
@@ -96,6 +101,12 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Middlewares
 			return headers == null
 				? new List<string>()
 				: headers.Select(_ => $"{_.Key}: {_.Value}").ToList();
+		}
+
+		private static bool IsGrpc(HttpContext context)
+		{
+			return context.Request?.Headers?
+				.Any(_ => _.Key == "Content-Type" && _.Value == "application/grpc") ?? false;
 		}
 	}
 }
