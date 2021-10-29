@@ -25,8 +25,6 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Extensions
 			{
 				services.AddSingleton<IStartupFilter, ServiceInfoStartupFilter>();
 
-				services.AddSingleton<IStartupFilter, LoggingStartupFilter>();
-
 				services.AddSingleton<IStartupFilter, SwaggerStartupFilter>()
 					.AddSwaggerGen(options =>
 					{
@@ -36,6 +34,8 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Extensions
 						var xmlFilePath = Path.Combine(AppContext.BaseDirectory, xmlFileName);
 						options.IncludeXmlComments(xmlFilePath);
 					});
+
+				services.AddSingleton<IStartupFilter, LoggingStartupFilter>();
 
 				services.AddControllers(options => options.Filters.Add<GlobalExceptionFilter>());
 			});
