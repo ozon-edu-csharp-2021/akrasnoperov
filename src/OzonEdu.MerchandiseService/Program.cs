@@ -16,10 +16,20 @@ namespace OzonEdu.MerchandiseService
 			Host.CreateDefaultBuilder(args)
 				.ConfigureWebHostDefaults(webBuilder =>
 				{
+					// Конфигурируем Kestrel, чтобы для HTTP API и для Grpc API использовались разные версии HTTP.
+					webBuilder.ConfigureKestrel(options =>
+					{
+						options.ListenAnyIP(5000, listenOptions =>
+						{
+							listenOptions.Protocols = HttpProtocols.Http1;
+						});
+
+						options.ListenAnyIP(5004, listenOptions =>
+						{
+							listenOptions.Protocols = HttpProtocols.Http2;
+						});
+					});
 					webBuilder.UseStartup<Startup>();
-					// Если при вызове Grpc получаете ошибку '14 UNAVAILABLE: Trying to connect an http1.x server',
-					// то раскомментируйте строчку ниже.
-					// webBuilder.ConfigureKestrel(kestrel => kestrel.ConfigureEndpointDefaults(options => options.Protocols = HttpProtocols.Http2));
 				})
 				.AddInfrastructure();
 	}

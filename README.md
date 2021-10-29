@@ -3,6 +3,7 @@
 
 Состоит из:
 - OzonEdu.MerchandiseService — проект с основным asp.net core сервисом.
+- OzonEdu.MerchandiseService.Infrastructure - Проект с инфраструктурой для основного сервиса.
 - OzonEdu.MerchandiseService.Grpc - проект с grpc-сервисом.
 - OzonEdu.MerchandiseService.HttpClients - проект с http-клиентом для интеграция с REST API сервиса.
 - OzonEdu.MerchandiseService.HttpModels - проект с контрактами для REST API.
@@ -12,6 +13,3 @@
 - emailing-service - сервис отправки электронной почты;
 - employees-service - сервис сотрудников;
 - stock-api - сервис отвечающий за остатки мерча на складе.
-
-Если при вызове Grpc получаете ошибку `14 UNAVAILABLE: Trying to connect an http1.x server`,
-то в `Program` нужно добавить `webBuilder.ConfigureKestrel(kestrel => kestrel.ConfigureEndpointDefaults(kk => kk.Protocols = HttpProtocols.Http2));`.

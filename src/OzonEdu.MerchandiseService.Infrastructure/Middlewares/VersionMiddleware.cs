@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
@@ -23,9 +24,18 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Middlewares
 		/// <param name="context"></param>
 		public async Task InvokeAsync(HttpContext context)
 		{
-			var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "no version";
+			context.Response.Clear();
 			context.Response.StatusCode = StatusCodes.Status200OK;
-			await context.Response.WriteAsync(version);
+
+			var version = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "no version";
+			var serviceName = Assembly.GetEntryAssembly()?.GetName().Name ?? "no service name";
+			var body = JsonSerializer.Serialize(new
+			{
+				version = version,
+				serviceName = serviceName
+			});
+
+			await context.Response.WriteAsync(body);
 		}
 	}
 }
