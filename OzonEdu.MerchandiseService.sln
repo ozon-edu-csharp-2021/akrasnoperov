@@ -12,6 +12,7 @@ ProjectSection(SolutionItems) = preProject
 	README.md = README.md
 	.gitignore = .gitignore
 	.editorconfig = .editorconfig
+	merchandise-service.drawio = merchandise-service.drawio
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{2789580E-C191-4E80-A906-30F93F498CAF}"
@@ -26,6 +27,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService.Grpc", "src\OzonEdu.MerchandiseService.Grpc\OzonEdu.MerchandiseService.Grpc.csproj", "{61CF1862-A71C-45E0-9B69-B37326231C37}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService.Infrastructure", "src\OzonEdu.MerchandiseService.Infrastructure\OzonEdu.MerchandiseService.Infrastructure.csproj", "{88C4644C-E513-47AB-8BA0-B1FE5908EAEA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService.Domain", "src\OzonEdu.MerchandiseService.Domain\OzonEdu.MerchandiseService.Domain.csproj", "{54D98630-0573-4FFF-BCDE-0100DA7768BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OzonEdu.MerchandiseService.Domain.Tests", "tests\OzonEdu.MerchandiseService.Domain.Tests\OzonEdu.MerchandiseService.Domain.Tests.csproj", "{EA3DBE8D-6139-4FE1-939A-2A87C803618C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +58,14 @@ Global
 		{88C4644C-E513-47AB-8BA0-B1FE5908EAEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88C4644C-E513-47AB-8BA0-B1FE5908EAEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88C4644C-E513-47AB-8BA0-B1FE5908EAEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54D98630-0573-4FFF-BCDE-0100DA7768BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54D98630-0573-4FFF-BCDE-0100DA7768BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54D98630-0573-4FFF-BCDE-0100DA7768BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54D98630-0573-4FFF-BCDE-0100DA7768BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA3DBE8D-6139-4FE1-939A-2A87C803618C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA3DBE8D-6139-4FE1-939A-2A87C803618C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA3DBE8D-6139-4FE1-939A-2A87C803618C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA3DBE8D-6139-4FE1-939A-2A87C803618C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3C937E9B-3FC8-454D-8BD1-2A6A174241F2} = {3FDE8169-5DEC-4D35-BC42-8FF520EA971C}
@@ -60,5 +73,7 @@ Global
 		{6177B85A-FC15-4EB9-B65B-D63EC57D6A4A} = {3FDE8169-5DEC-4D35-BC42-8FF520EA971C}
 		{61CF1862-A71C-45E0-9B69-B37326231C37} = {3FDE8169-5DEC-4D35-BC42-8FF520EA971C}
 		{88C4644C-E513-47AB-8BA0-B1FE5908EAEA} = {3FDE8169-5DEC-4D35-BC42-8FF520EA971C}
+		{54D98630-0573-4FFF-BCDE-0100DA7768BF} = {3FDE8169-5DEC-4D35-BC42-8FF520EA971C}
+		{EA3DBE8D-6139-4FE1-939A-2A87C803618C} = {CEF7348A-8BC6-4DD1-A81F-0E8F1613A2C2}
 	EndGlobalSection
 EndGlobal
