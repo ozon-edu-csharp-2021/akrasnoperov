@@ -15,12 +15,12 @@ namespace OzonEdu.MerchandiseService.Domain.Contracts
 		IUnitOfWork UnitOfWork { get; }
 
 		/// <summary>
-		/// Возвращает сущности по <paramref name="entityId"/>.
+		/// Возвращает сущность по ее идентификатору <paramref name="entityId"/>.
 		/// </summary>
 		/// <param name="entityId">Идентификатор сущности.</param>
 		/// <param name="ct">Токен для отмены операции <see cref="CancellationToken"/></param>
 		/// <returns>Существующая сущность <see cref="TAggregationRoot"/>.</returns>
-		Task<TAggregationRoot> GetByIdAsync(
+		Task<TAggregationRoot?> FindByIdAsync(
 			int entityId,
 			CancellationToken ct = default);
 

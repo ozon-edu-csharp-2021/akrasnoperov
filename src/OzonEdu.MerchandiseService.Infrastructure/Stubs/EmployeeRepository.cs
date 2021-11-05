@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate;
@@ -17,41 +15,9 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
 		public IUnitOfWork UnitOfWork { get; }
 
 		/// <inheritdoc />
-		public Task<Employee> GetByIdAsync(
-			int entityId,
-			CancellationToken ct = default)
+		public Task<Employee?> FindByIdAsync(int entityId, CancellationToken ct = default)
 		{
-			return Task.FromResult(new Employee(ClothingSize.M)
-			{
-				IssuedMerches = new Dictionary<Merch, DateTimeOffset>
-				{
-					{
-						new Merch(
-							new Sku(123),
-							new Name("Классный рюкзачок"),
-							MerchType.Bag,
-							new Quantity(1)),
-						new DateTimeOffset(new DateTime(2021, 05, 07), TimeSpan.FromHours(3))
-					},
-					{
-						new Merch(
-							new Sku(456),
-							new Name("Четкий блокнотик"),
-							MerchType.Notepad,
-							new Quantity(1)),
-						new DateTimeOffset(new DateTime(2021, 05, 07), TimeSpan.FromHours(3))
-					},
-					{
-						new Merch(
-							new Sku(789),
-							new Name("Космическая футболка"),
-							MerchType.TShirt,
-							new Quantity(1),
-							ClothingSize.M),
-						new DateTimeOffset(new DateTime(2021, 07, 01), TimeSpan.FromHours(3))
-					}
-				}
-			});
+			return Task.FromResult(new Employee(ClothingSize.L, new Email("employee1@ozon.ru")))!;
 		}
 
 		/// <inheritdoc />

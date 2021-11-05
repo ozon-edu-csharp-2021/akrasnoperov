@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using OzonEdu.MerchandiseService.Domain.Models;
 
-namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate
+namespace OzonEdu.MerchandiseService.Domain.AggregationModels.IssuedMerchAggregate
 {
 	/// <summary>
 	/// ValueObject, описывающий количество Merch.

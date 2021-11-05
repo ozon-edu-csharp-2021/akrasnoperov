@@ -10,6 +10,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate
 	{
 		/// <summary>
 		/// Численное значение, определяющее SKU.
+		/// Складской идентификатор товарной позиции.
 		/// </summary>
 		public long Value { get; }
 

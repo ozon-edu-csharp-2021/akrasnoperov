@@ -34,15 +34,22 @@ namespace OzonEdu.MerchandiseService.HttpModels
 		public int MerchId { get; }
 
 		/// <summary>
+		/// Количество выданного мерча.
+		/// </summary>
+		public int Quantity { get; }
+
+		/// <summary>
 		/// Дата выдачи мерча.
 		/// </summary>
 		public DateTimeOffset IssuedDate { get; }
 
 		public IssuedMerch(
 			int merchId,
+			int quantity,
 			DateTimeOffset issuedDate)
 		{
 			MerchId = merchId;
+			Quantity = quantity;
 			IssuedDate = issuedDate;
 		}
 	}

@@ -17,8 +17,4 @@
       <ProjectReference Include="..\OzonEdu.MerchandiseService.Domain\OzonEdu.MerchandiseService.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Commands" />
-    </ItemGroup>
-
 </Project>

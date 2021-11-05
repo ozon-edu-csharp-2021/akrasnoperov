@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.IssuedMerchAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate;
-using OzonEdu.MerchandiseService.Domain.Exceptions.EmployeeAggregate;
 using Xunit;
 
 namespace OzonEdu.MerchandiseService.Domain.Tests
@@ -14,111 +14,135 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 	[Trait("Category", "Unit")]
 	public class EmployeeTests
 	{
-		#region AddIssuedMerch
+		#region IsMerchFit
 
 		[Fact]
-		public void AddIssuedMerchToEmployeeWithEmptyIssuedMerch()
+		public void IsMerchFitWithMerchNoClothingSize()
 		{
-			var sut = new Employee(ClothingSize.L);
+			var sut = new Employee(ClothingSize.L, new Email(""));
 			var merch = new Merch(
 				new Sku(123),
 				new Name("Name"),
-				MerchType.Bag,
-				new Quantity(1));
+				MerchType.Bag);
 
-			sut.AddIssuedMerch(merch, DateTimeOffset.UtcNow);
-			var result = sut.GetIssuedMerches();
+			var result = sut.IsMerchFit(merch);
 
-			result.Count.Should().Be(1);
-			result.Should().Contain(_ => _.Key.MerchType.Equals(merch.MerchType));
+			result.Should().BeTrue("Подходит по размеру, так как мерч не имеет размера.");
 		}
 
 		[Fact]
-		public void AddIssuedMerchToEmployeeWithNoEmptyIssuedMerch()
+		public void IsMerchFitWithMerchSameClothingSize()
 		{
-			var sut = new Employee(ClothingSize.L);
+			var sut = new Employee(ClothingSize.L, new Email(""));
+			var merch = new Merch(
+				new Sku(123),
+				new Name("Name"),
+				MerchType.Sweatshirt,
+				ClothingSize.L);
+
+			var result = sut.IsMerchFit(merch);
+
+			result.Should().BeTrue("Подходит по размеру, так как размер мерча совпадает с размером одежды сотрудника");
+		}
+
+		[Fact]
+		public void IsMerchFitWithMerchNotSameClothingSize()
+		{
+			var sut = new Employee(ClothingSize.L, new Email(""));
+			var merch = new Merch(
+				new Sku(123),
+				new Name("Name"),
+				MerchType.Sweatshirt,
+				ClothingSize.M);
+
+			var result = sut.IsMerchFit(merch);
+
+			result.Should().BeFalse("Не подходит по размеру, так как размер мерча не совпадает с размером одежды сотрудника");
+		}
+
+		#endregion
+
+		#region HasIssuedMerch
+
+		[Fact]
+		public void HasIssuedMerchToEmployeeWithEmptyIssuedMerch()
+		{
+			var sut = new Employee(ClothingSize.L, new Email(""));
+			var merch = new Merch(
+				new Sku(123),
+				new Name("Name"),
+				MerchType.Bag);
+
+			var result = sut.HasIssuedMerch(merch, DateTimeOffset.UtcNow);
+
+			result.Should().BeFalse();
+		}
+
+		[Fact]
+		public void HasIssuedMerchToEmployeeWithNoEmptyIssuedMerch()
+		{
+			var sut = new Employee(ClothingSize.L, new Email(""));
 			var issuedMerch = new Merch(
 				new Sku(123),
 				new Name("Name"),
 				MerchType.Bag,
-				new Quantity(1));
-			sut.IssuedMerches = new Dictionary<Merch, DateTimeOffset>
+				id: 1);
+			sut.IssuedMerches = new HashSet<IssuedMerch>
 			{
-				{ issuedMerch, DateTimeOffset.UtcNow }
+				new (DateTimeOffset.UtcNow, new Quantity(1), Status.Issued, issuedMerch, sut)
 			};
 			var merch = new Merch(
 				new Sku(1234),
 				new Name("Name"),
 				MerchType.Notepad,
-				new Quantity(1));
+				id: 2);
 
-			sut.AddIssuedMerch(merch, DateTimeOffset.UtcNow);
-			var result = sut.GetIssuedMerches();
+			var result = sut.HasIssuedMerch(merch, DateTimeOffset.UtcNow);
 
-			result.Count.Should().Be(2);
-			result.Should().Contain(_ => _.Key.MerchType.Equals(merch.MerchType));
-			result.Should().Contain(_ => _.Key.MerchType.Equals(issuedMerch.MerchType));
+			result.Should().BeFalse();
 		}
 
 		[Theory]
 		[InlineData(365)]
 		[InlineData(366)]
 		[InlineData(400)]
-		public void AddIssuedMerchToEmployeeWithIssuedMerch1YearAndMoreAgo365DaysInYear(int daysCount)
+		public void HasIssuedMerchToEmployeeWithIssuedMerch1YearAndMoreAgo365DaysInYear(int daysCount)
 		{
-			var sut = new Employee(ClothingSize.L);
+			var sut = new Employee(ClothingSize.L, new Email(""));
 			var merchIssuedDate = new DateTimeOffset(new DateTime(2021, 01, 01), TimeSpan.Zero);
 			var issuedMerch = new Merch(
 				new Sku(123),
 				new Name("Name"),
-				MerchType.Notepad,
-				new Quantity(1));
-			sut.IssuedMerches = new Dictionary<Merch, DateTimeOffset>
+				MerchType.Notepad);
+			sut.IssuedMerches = new HashSet<IssuedMerch>
 			{
-				{ issuedMerch, merchIssuedDate }
+				new (merchIssuedDate, new Quantity(1), Status.Issued, issuedMerch, sut)
 			};
-			var merch = new Merch(
-				new Sku(123),
-				new Name("Name"),
-				MerchType.Notepad,
-				new Quantity(1));
 
-			sut.AddIssuedMerch(merch, merchIssuedDate.AddDays(daysCount));
-			var result = sut.GetIssuedMerches();
+			var result = sut.HasIssuedMerch(issuedMerch, merchIssuedDate.AddDays(daysCount));
 
-			result.Count.Should().Be(2);
-			result.Should().Contain(_ => _.Key.MerchType.Equals(merch.MerchType));
-			result.Should().Contain(_ => _.Key.MerchType.Equals(issuedMerch.MerchType));
+			result.Should().BeFalse();
 		}
 
 		[Theory]
 		[InlineData(366)]
 		[InlineData(400)]
-		public void AddIssuedMerchToEmployeeWithIssuedMerch1YearAndMoreAgo366DaysInYear(int daysCount)
+		public void HasIssuedMerchToEmployeeWithIssuedMerch1YearAndMoreAgo366DaysInYear(int daysCount)
 		{
-			var sut = new Employee(ClothingSize.L);
+			var sut = new Employee(ClothingSize.L, new Email(""));
 			var merchIssuedDate = new DateTimeOffset(new DateTime(2020, 01, 01), TimeSpan.Zero);
 			var issuedMerch = new Merch(
 				new Sku(123),
 				new Name("Name"),
-				MerchType.Notepad,
-				new Quantity(1));
-			sut.IssuedMerches = new Dictionary<Merch, DateTimeOffset>
+				MerchType.Notepad);
+			sut.IssuedMerches = new HashSet<IssuedMerch>
 			{
-				{ issuedMerch, merchIssuedDate }
+				new (merchIssuedDate, new Quantity(1), Status.Issued, issuedMerch, sut)
 			};
-			var merch = new Merch(
-				new Sku(123),
-				new Name("Name"),
-				MerchType.Notepad,
-				new Quantity(1));
 
-			sut.AddIssuedMerch(merch, merchIssuedDate.AddDays(daysCount));
-			var result = sut.GetIssuedMerches();
+			var result = sut.HasIssuedMerch(issuedMerch, merchIssuedDate.AddDays(daysCount));
 
-			result.Count.Should().Be(2);
-			result.Should().Contain(_ => _.Key.MerchType.Equals(merch.MerchType));
-			result.Should().Contain(_ => _.Key.MerchType.Equals(issuedMerch.MerchType));
+			result.Should().BeFalse();
 		}
 
 		[Theory]
@@ -127,27 +151,20 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 		[InlineData(300)]
 		public void AddIssuedMerchToEmployeeWithIssuedMerchLessThan1YearAgo365DaysInYear(int daysCount)
 		{
-			var sut = new Employee(ClothingSize.L);
+			var sut = new Employee(ClothingSize.L, new Email(""));
 			var merchIssuedDate = new DateTimeOffset(new DateTime(2021, 01, 01), TimeSpan.Zero);
 			var issuedMerch = new Merch(
 				new Sku(123),
 				new Name("Name"),
-				MerchType.Notepad,
-				new Quantity(1));
-			sut.IssuedMerches = new Dictionary<Merch, DateTimeOffset>
+				MerchType.Notepad);
+			sut.IssuedMerches = new HashSet<IssuedMerch>
 			{
-				{ issuedMerch, merchIssuedDate }
+				new (merchIssuedDate, new Quantity(1), Status.Issued, issuedMerch, sut)
 			};
-			var merch = new Merch(
-				new Sku(123),
-				new Name("Name"),
-				MerchType.Notepad,
-				new Quantity(1));
 
-			Action act = () => sut.AddIssuedMerch(merch, merchIssuedDate.AddDays(daysCount));
+			var result = sut.HasIssuedMerch(issuedMerch, merchIssuedDate.AddDays(daysCount));
 
-			act.Should().Throw<IssueIssuedMerchException>()
-				.WithMessage("С момента выдачи мерча типа Notepad прошло меньше года.");
+			result.Should().BeTrue();
 		}
 
 		[Theory]
@@ -155,88 +172,22 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 		[InlineData(364)]
 		[InlineData(363)]
 		[InlineData(300)]
-		public void AddIssuedMerchToEmployeeWithIssuedMerchLessThan1YearAgo366DaysInYear(int daysCount)
+		public void HasIssuedMerchToEmployeeWithIssuedMerchLessThan1YearAgo366DaysInYear(int daysCount)
 		{
-			var sut = new Employee(ClothingSize.L);
+			var sut = new Employee(ClothingSize.L, new Email(""));
 			var merchIssuedDate = new DateTimeOffset(new DateTime(2020, 01, 01), TimeSpan.Zero);
 			var issuedMerch = new Merch(
 				new Sku(123),
 				new Name("Name"),
-				MerchType.Notepad,
-				new Quantity(1));
-			sut.IssuedMerches = new Dictionary<Merch, DateTimeOffset>
+				MerchType.Notepad);
+			sut.IssuedMerches = new HashSet<IssuedMerch>
 			{
-				{ issuedMerch, merchIssuedDate }
-			};
-			var merch = new Merch(
-				new Sku(123),
-				new Name("Name"),
-				MerchType.Notepad,
-				new Quantity(1));
-
-			Action act = () => sut.AddIssuedMerch(merch, merchIssuedDate.AddDays(daysCount));
-
-			act.Should().Throw<IssueIssuedMerchException>()
-				.WithMessage("С момента выдачи мерча типа Notepad прошло меньше года.");
-		}
-
-		[Fact]
-		public void AddIssuedMerchToEmployeeWithWrongClothingSize()
-		{
-			var sut = new Employee(ClothingSize.L);
-			var merch = new Merch(
-				new Sku(123),
-				new Name("Name"),
-				MerchType.Sweatshirt,
-				new Quantity(1),
-				ClothingSize.M);
-
-			Action act = () => sut.AddIssuedMerch(merch, DateTimeOffset.UtcNow);
-
-			act.Should().Throw<WrongClothingSizeException>()
-				.WithMessage("Размер одежды сотрудника L не совпадает с размером мерча M.");
-		}
-
-		#endregion
-
-		#region GetIssuedMerches
-
-		[Fact]
-		public void GetIssuedMerchesWithEmptyIssuedMerch()
-		{
-			var sut = new Employee(ClothingSize.L);
-
-			var result = sut.GetIssuedMerches();
-
-			result.Should().BeEmpty();
-		}
-
-		[Fact]
-		public void GetIssuedMerchesWithWithNoEmptyIssuedMerch()
-		{
-			var sut = new Employee(ClothingSize.L);
-			var issuedMerch1 = new Merch(
-				new Sku(123),
-				new Name("Name"),
-				MerchType.Bag,
-				new Quantity(1));
-			var issuedMerch2 = new Merch(
-				new Sku(1234),
-				new Name("Name"),
-				MerchType.Notepad,
-				new Quantity(1));
-			sut.IssuedMerches = new Dictionary<Merch, DateTimeOffset>
-			{
-				{ issuedMerch1, DateTimeOffset.UtcNow },
-				{ issuedMerch2, DateTimeOffset.UtcNow }
+				new (merchIssuedDate, new Quantity(1), Status.Issued, issuedMerch, sut)
 			};
 
-			var result = sut.GetIssuedMerches();
+			var result = sut.HasIssuedMerch(issuedMerch, merchIssuedDate.AddDays(daysCount));
 
-			result.Should().NotBeNullOrEmpty();
-			result.Count.Should().Be(2);
-			result.Should().Contain(_ => _.Key.Sku.Equals(issuedMerch1.Sku));
-			result.Should().Contain(_ => _.Key.Sku.Equals(issuedMerch2.Sku));
+			result.Should().BeTrue();
 		}
 
 		#endregion
