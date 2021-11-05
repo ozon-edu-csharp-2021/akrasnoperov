@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.IssuedMerchAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate;
-using OzonEdu.MerchandiseService.Domain.Exceptions.EmployeeAggregate;
 using OzonEdu.MerchandiseService.Domain.Models;
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate
@@ -18,57 +18,59 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate
 		public ClothingSize ClothingSize { get; }
 
 		/// <summary>
-		/// Список выданного Merch сотруднику <see cref="Merch"/>.
-		/// Ключ - <see cref="Merch"/>, значение - дата выдачи.
+		/// Электронная почта.
 		/// </summary>
-		public IDictionary<Merch, DateTimeOffset> IssuedMerches { get; set; }
+		public Email Email { get; }
+
+		/// <summary>
+		/// Список выданного мерча сотруднику <see cref="IssuedMerch"/>.
+		/// </summary>
+		public ICollection<IssuedMerch> IssuedMerches { get; set; }
 
 		/// <summary>
 		/// .ctor
 		/// </summary>
-		public Employee(ClothingSize clothingSize)
+		public Employee(
+			ClothingSize clothingSize,
+			Email email)
 		{
 			ClothingSize = clothingSize;
-			IssuedMerches = new Dictionary<Merch, DateTimeOffset>();
+			Email = email;
+			IssuedMerches = new HashSet<IssuedMerch>();
 		}
 
 		/// <summary>
-		/// Выдает <paramref name="merch"/> сотруднику, добавляя его в коллекцию <see cref="IssuedMerches"/>.
+		/// Проверяет, что мерч подходит по размеру сотруднику, если у мерча есть размер.
+		/// Если у мерча нет размера, то считаем, что мерч подходит.
 		/// </summary>
-		/// <param name="merch"><see cref="Merch"/> для выдачи сотруднику.</param>
-		/// <param name="issueDate">Дата выдачи мерча.</param>
-		/// <exception cref="IssueIssuedMerchException"></exception>
-		public void AddIssuedMerch(
+		/// <param name="merch"></param>
+		/// <returns>True, если мерч подходит по размеру.</returns>
+		public bool IsMerchFit(Merch merch)
+		{
+			return merch.ClothingSize is null || ClothingSize.Equals(merch.ClothingSize);
+		}
+
+		/// <summary>
+		/// Проверяет, выдавался ли такой же мерч сотруднику меньше года назад.
+		/// </summary>
+		/// <param name="merch">Новый мерч для выдачи сотруднику <see cref="Merch"/>.</param>
+		/// <param name="issueDate">Дата выдачи нового мерча.</param>
+		/// <returns>True, если выдавался такой же мерч меньше года назад.</returns>
+		public bool HasIssuedMerch(
 			Merch merch,
 			DateTimeOffset issueDate)
 		{
-			// Размер одежды сотрудника и размер мерча не совпадают.
-			if (merch.ClothingSize is not null &&
-				!merch.ClothingSize.Equals(ClothingSize))
+			var issuedMerch = IssuedMerches
+				.Where(_ => _.MerchId == merch.Id)
+				.OrderByDescending(_ => _.IssueDate)
+				.FirstOrDefault();
+			if (issuedMerch is null)
 			{
-				throw new WrongClothingSizeException(ClothingSize, merch.ClothingSize);
+				return false;
 			}
-			var (issuedMerch, issuedMerchIssueDate) = IssuedMerches
-				.Where(_ => _.Key.Sku.Equals(merch.Sku))
-				.OrderByDescending(_ => _.Value).FirstOrDefault();
-			if (issuedMerch is not null)
-			{
-				// Такой же мерч выдавался сотруднику меньше года назад.
-				if (issuedMerchIssueDate.AddYears(1) > issueDate)
-				{
-					throw new IssueIssuedMerchException(merch.MerchType);
-				}
-			}
-			IssuedMerches.Add(merch, issueDate);
-		}
 
-		/// <summary>
-		/// Возвращает выданный сотруднику мерч.
-		/// </summary>
-		/// <returns>Список выданного мерча <see cref="Merch"/>.</returns>
-		public IReadOnlyDictionary<Merch, DateTimeOffset> GetIssuedMerches()
-		{
-			return IssuedMerches.ToDictionary(_ => _.Key, _ => _.Value);
+			// Такой же мерч выдавался сотруднику меньше года назад.
+			return issuedMerch.IssueDate.AddYears(1) > issueDate;
 		}
 	}
 }

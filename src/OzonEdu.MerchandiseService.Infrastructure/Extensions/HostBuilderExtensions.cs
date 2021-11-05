@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OzonEdu.MerchandiseService.Infrastructure.Filters;
-using OzonEdu.MerchandiseService.Infrastructure.Handlers.EmployeeAggregate;
+using OzonEdu.MerchandiseService.Infrastructure.Handlers.IssuedMerchAggregate;
 using OzonEdu.MerchandiseService.Infrastructure.Interceptors;
 using OzonEdu.MerchandiseService.Infrastructure.StartupFilters;
 

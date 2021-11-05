@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.IssuedMerchAggregate;
 using OzonEdu.MerchandiseService.Domain.Models;
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate
@@ -29,9 +31,9 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate
 		public ClothingSize? ClothingSize { get; }
 
 		/// <summary>
-		/// <see cref="MerchAggregate.Quantity"/>.
+		/// Список выданного мерча сотруднику <see cref="IssuedMerch"/>.
 		/// </summary>
-		public Quantity Quantity { get; set; }
+		public ICollection<IssuedMerch> IssuedMerches { get; set; }
 
 		/// <summary>
 		/// .ctor
@@ -40,16 +42,16 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate
 			Sku sku,
 			Name name,
 			MerchType merchType,
-			Quantity quantity,
-			ClothingSize? clothingSize = null)
+			ClothingSize? clothingSize = null,
+			int? id = null)
 		{
 			// TODO: Просто заглушка. Убрать, когда подключим БД.
-			Id = new Random().Next(1, 10_000);
+			Id = id ?? new Random().Next(1, 10_000);
 			Sku = sku;
 			Name = name;
 			MerchType = merchType;
-			Quantity = quantity;
 			ClothingSize = clothingSize;
+			IssuedMerches = new HashSet<IssuedMerch>();
 		}
 	}
 }

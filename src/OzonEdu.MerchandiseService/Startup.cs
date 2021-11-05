@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
-using OzonEdu.MerchandiseService.Infrastructure.Interceptors;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.IssuedMerchAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate;
 using OzonEdu.MerchandiseService.GrpcServices;
 using OzonEdu.MerchandiseService.Infrastructure.Stubs;
 
@@ -19,7 +20,9 @@ namespace OzonEdu.MerchandiseService
 		/// <param name="services"><see cref="IServiceCollection"/>.</param>
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddTransient<IIssuedMerchRepository, IssuedMerchRepository>();
 			services.AddTransient<IEmployeeRepository, EmployeeRepository>();
+			services.AddTransient<IMerchRepository, MerchRepository>();
 		}
 
 		/// <summary>

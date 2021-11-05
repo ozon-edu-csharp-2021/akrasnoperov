@@ -4,8 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using OzonEdu.MerchandiseService.Domain.Exceptions.EmployeeAggregate;
 using OzonEdu.MerchandiseService.HttpModels;
-using OzonEdu.MerchandiseService.Infrastructure.Queries.EmployeeAggregate;
+using OzonEdu.MerchandiseService.Infrastructure.Commands.IssuedMerchAggregate;
+using OzonEdu.MerchandiseService.Infrastructure.Queries.IssuedMerchAggregate;
 
 namespace OzonEdu.MerchandiseService.Controllers.V1
 {
@@ -28,22 +30,47 @@ namespace OzonEdu.MerchandiseService.Controllers.V1
 		}
 
 		/// <summary>
-		/// Запрашивает мерч по <paramref name="merchId"/>
-		/// для выдачи сотруднику <paramref name="userId"/>.
+		/// Запрашивает мерч по <paramref name="sku"/>
+		/// для выдачи сотруднику <paramref name="employeeId"/>.
 		/// </summary>
-		/// <param name="merchId">Идентификатор мерча.</param>
-		/// <param name="userId">Идентификатор пользователя.</param>
+		/// <param name="sku">Идентификатор товара на складе.</param>
+		/// <param name="employeeId">Идентификатор пользователя.</param>
+		/// <param name="quantity">Количество мерча для выдачи.</param>
 		/// <param name="ct"><see cref="CancellationToken"/>.</param>
-		[HttpPost("{merchId:int}/users/{userId:int}")]
-		[ProducesResponseType(204)]
+		[HttpPost("{sku:long}/users/{employeeId:int}")]
+		[ProducesResponseType(typeof(IssueMerchResponse), 200)]
 		[ProducesResponseType(400)]
 		[ProducesResponseType(404)]
-		public Task<IActionResult> IssueMerchAsync(
-			[FromRoute] int merchId,
-			[FromRoute] int userId,
+		public async Task<IActionResult> IssueMerchAsync(
+			[FromRoute] long sku,
+			[FromRoute] int employeeId,
+			[FromQuery] int quantity,
 			CancellationToken ct)
 		{
-			throw new NotImplementedException();
+			var command = new IssueMerchCommand
+			{
+				Sku = sku,
+				EmployeeId = employeeId,
+				Quantity = quantity
+			};
+			try
+			{
+				var issuedMerch = await _mediator.Send(command, ct);
+				var response = new IssueMerchResponse(issuedMerch.Status.Id);
+				return Ok(response);
+			}
+			catch (Exception ex)
+			{
+				switch (ex)
+				{
+					case IssueIssuedMerchException or WrongClothingSizeException:
+						return BadRequest(ex.Message);
+					case EntityNotFoundException:
+						return NotFound(ex.Message);
+					default:
+						throw;
+				}
+			}
 		}
 
 		/// <summary>
@@ -63,9 +90,10 @@ namespace OzonEdu.MerchandiseService.Controllers.V1
 			{
 				EmployeeId = employeeId
 			};
-			var dict = await _mediator.Send(query, ct);
+			var issuedMerches = await _mediator.Send(query, ct);
 
-			var result = new IssuedMerchResponse(dict.Select(_ => new IssuedMerch(_.Key.Id, _.Value)).ToList());
+			var result = new IssuedMerchResponse(issuedMerches
+				.Select(_ => new IssuedMerch(_.MerchId, _.Quantity.Value, _.IssueDate)).ToList());
 
 			return Ok(result);
 		}
