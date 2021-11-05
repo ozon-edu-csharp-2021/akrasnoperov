@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.IssuedMerchAggregate;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate;
+using OzonEdu.MerchandiseService.Domain.Contracts;
 using OzonEdu.MerchandiseService.GrpcServices;
 using OzonEdu.MerchandiseService.Infrastructure.Stubs;
 
@@ -23,6 +24,7 @@ namespace OzonEdu.MerchandiseService
 			services.AddTransient<IIssuedMerchRepository, IssuedMerchRepository>();
 			services.AddTransient<IEmployeeRepository, EmployeeRepository>();
 			services.AddTransient<IMerchRepository, MerchRepository>();
+			services.AddTransient<IUnitOfWork, UnitOfWork>();
 		}
 
 		/// <summary>

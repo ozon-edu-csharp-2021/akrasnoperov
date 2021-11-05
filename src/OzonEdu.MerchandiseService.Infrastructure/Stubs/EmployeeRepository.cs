@@ -14,6 +14,14 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
 		/// <inheritdoc />
 		public IUnitOfWork UnitOfWork { get; }
 
+		/// <summary>
+		/// .ctor
+		/// </summary>
+		public EmployeeRepository(IUnitOfWork unitOfWork)
+		{
+			UnitOfWork = unitOfWork;
+		}
+
 		/// <inheritdoc />
 		public Task<Employee?> FindByIdAsync(int entityId, CancellationToken ct = default)
 		{
