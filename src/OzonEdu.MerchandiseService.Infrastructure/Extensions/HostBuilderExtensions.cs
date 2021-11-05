@@ -1,10 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OzonEdu.MerchandiseService.Infrastructure.Filters;
+using OzonEdu.MerchandiseService.Infrastructure.Handlers.EmployeeAggregate;
+using OzonEdu.MerchandiseService.Infrastructure.Interceptors;
 using OzonEdu.MerchandiseService.Infrastructure.StartupFilters;
 
 namespace OzonEdu.MerchandiseService.Infrastructure.Extensions
@@ -38,6 +41,10 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Extensions
 				services.AddSingleton<IStartupFilter, LoggingStartupFilter>();
 
 				services.AddControllers(options => options.Filters.Add<GlobalExceptionFilter>());
+
+				services.AddMediatR(typeof(GetIssuedMerchQueryHandler).Assembly);
+
+				services.AddGrpc(options => options.Interceptors.Add<LoggingInterceptor>());
 			});
 
 			return builder;

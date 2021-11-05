@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace OzonEdu.MerchandiseService.HttpModels
 {
@@ -27,6 +28,22 @@ namespace OzonEdu.MerchandiseService.HttpModels
 	/// </summary>
 	public class IssuedMerch
 	{
+		/// <summary>
+		/// Идентификатор выданного мерча.
+		/// </summary>
+		public int MerchId { get; }
 
+		/// <summary>
+		/// Дата выдачи мерча.
+		/// </summary>
+		public DateTimeOffset IssuedDate { get; }
+
+		public IssuedMerch(
+			int merchId,
+			DateTimeOffset issuedDate)
+		{
+			MerchId = merchId;
+			IssuedDate = issuedDate;
+		}
 	}
 }
