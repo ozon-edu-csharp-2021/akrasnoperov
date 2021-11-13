@@ -17,7 +17,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate
 		/// <summary>
 		/// .ctor
 		/// </summary>
-		public ClothingSize(int id, string name) : base(id, name)
+		private ClothingSize(int id, string name) : base(id, name)
 		{
 		}
 	}

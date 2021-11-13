@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OzonEdu.MerchandiseService.Domain.Exceptions.EmployeeAggregate
+namespace OzonEdu.MerchandiseService.Infrastructure.Exceptions
 {
 	/// <summary>
 	/// Исключение для ситуаций, когда не смогли найти Entity.

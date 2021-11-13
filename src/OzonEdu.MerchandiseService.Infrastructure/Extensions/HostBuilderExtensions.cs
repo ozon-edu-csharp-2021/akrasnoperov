@@ -1,13 +1,16 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OzonEdu.MerchandiseService.Infrastructure.Commands.IssuedMerchAggregate;
 using OzonEdu.MerchandiseService.Infrastructure.Filters;
 using OzonEdu.MerchandiseService.Infrastructure.Handlers.IssuedMerchAggregate;
 using OzonEdu.MerchandiseService.Infrastructure.Interceptors;
+using OzonEdu.MerchandiseService.Infrastructure.PipelineBehaviors;
 using OzonEdu.MerchandiseService.Infrastructure.StartupFilters;
 
 namespace OzonEdu.MerchandiseService.Infrastructure.Extensions
@@ -42,7 +45,10 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Extensions
 
 				services.AddControllers(options => options.Filters.Add<GlobalExceptionFilter>());
 
-				services.AddMediatR(typeof(GetIssuedMerchQueryHandler).Assembly);
+				services.AddValidatorsFromAssembly(typeof(IssueMerchCommandValidator).Assembly);
+
+				services.AddMediatR(typeof(GetIssuedMerchQueryHandler).Assembly)
+					.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 				services.AddGrpc(options => options.Interceptors.Add<LoggingInterceptor>());
 			});

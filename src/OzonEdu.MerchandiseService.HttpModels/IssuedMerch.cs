@@ -31,7 +31,7 @@ namespace OzonEdu.MerchandiseService.HttpModels
 		/// <summary>
 		/// Идентификатор выданного мерча.
 		/// </summary>
-		public int MerchId { get; }
+		public long MerchId { get; }
 
 		/// <summary>
 		/// Количество выданного мерча.
@@ -44,7 +44,7 @@ namespace OzonEdu.MerchandiseService.HttpModels
 		public DateTimeOffset IssuedDate { get; }
 
 		public IssuedMerch(
-			int merchId,
+			long merchId,
 			int quantity,
 			DateTimeOffset issuedDate)
 		{

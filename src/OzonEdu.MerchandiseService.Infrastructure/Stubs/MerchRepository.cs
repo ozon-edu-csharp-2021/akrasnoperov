@@ -22,7 +22,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
 		}
 
 		/// <inheritdoc />
-		public Task<Merch?> FindByIdAsync(int entityId, CancellationToken ct = default)
+		public Task<Merch?> FindByIdAsync(long entityId, CancellationToken ct = default)
 		{
 			throw new System.NotImplementedException();
 		}
@@ -42,7 +42,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
 		/// <inheritdoc />
 		public Task<Merch?> FindBySkuAsync(Sku sku, CancellationToken ct = default)
 		{
-			return Task.FromResult<Merch?>(new Merch(sku, new Name("Супер ручка"), MerchType.Pen));
+			return Task.FromResult<Merch?>(new Merch(1, sku, Name.Create("Супер_ручка"), MerchType.Pen));
 		}
 	}
 }

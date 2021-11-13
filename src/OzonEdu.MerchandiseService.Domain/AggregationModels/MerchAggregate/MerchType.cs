@@ -17,7 +17,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate
 		/// <summary>
 		/// .ctor
 		/// </summary>
-		public MerchType(int id, string name) : base(id, name)
+		private MerchType(int id, string name) : base(id, name)
 		{
 		}
 	}

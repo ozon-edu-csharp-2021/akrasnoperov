@@ -19,10 +19,10 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 		[Fact]
 		public void IsMerchFitWithMerchNoClothingSize()
 		{
-			var sut = new Employee(ClothingSize.L, new Email(""));
+			var sut = new Employee(ClothingSize.L, Email.Create("test@ozon.ru"));
 			var merch = new Merch(
-				new Sku(123),
-				new Name("Name"),
+				Sku.Create(123),
+				Name.Create("Name"),
 				MerchType.Bag);
 
 			var result = sut.IsMerchFit(merch);
@@ -33,10 +33,10 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 		[Fact]
 		public void IsMerchFitWithMerchSameClothingSize()
 		{
-			var sut = new Employee(ClothingSize.L, new Email(""));
+			var sut = new Employee(ClothingSize.L, Email.Create("test@ozon.ru"));
 			var merch = new Merch(
-				new Sku(123),
-				new Name("Name"),
+				Sku.Create(123),
+				Name.Create("Name"),
 				MerchType.Sweatshirt,
 				ClothingSize.L);
 
@@ -48,10 +48,10 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 		[Fact]
 		public void IsMerchFitWithMerchNotSameClothingSize()
 		{
-			var sut = new Employee(ClothingSize.L, new Email(""));
+			var sut = new Employee(ClothingSize.L, Email.Create("test@ozon.ru"));
 			var merch = new Merch(
-				new Sku(123),
-				new Name("Name"),
+				Sku.Create(123),
+				Name.Create("Name"),
 				MerchType.Sweatshirt,
 				ClothingSize.M);
 
@@ -67,10 +67,10 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 		[Fact]
 		public void HasIssuedMerchToEmployeeWithEmptyIssuedMerch()
 		{
-			var sut = new Employee(ClothingSize.L, new Email(""));
+			var sut = new Employee(ClothingSize.L, Email.Create("test@ozon.ru"));
 			var merch = new Merch(
-				new Sku(123),
-				new Name("Name"),
+				Sku.Create(123),
+				Name.Create("Name"),
 				MerchType.Bag);
 
 			var result = sut.HasIssuedMerch(merch, DateTimeOffset.UtcNow);
@@ -81,21 +81,21 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 		[Fact]
 		public void HasIssuedMerchToEmployeeWithNoEmptyIssuedMerch()
 		{
-			var sut = new Employee(ClothingSize.L, new Email(""));
+			var sut = new Employee(ClothingSize.L, Email.Create("test@ozon.ru"));
 			var issuedMerch = new Merch(
-				new Sku(123),
-				new Name("Name"),
-				MerchType.Bag,
-				id: 1);
+				1,
+				Sku.Create(123),
+				Name.Create("Name"),
+				MerchType.Bag);
 			sut.IssuedMerches = new HashSet<IssuedMerch>
 			{
-				new (DateTimeOffset.UtcNow, new Quantity(1), Status.Issued, issuedMerch, sut)
+				new (DateTimeOffset.UtcNow, Quantity.Create(1), Status.Issued, issuedMerch, sut)
 			};
 			var merch = new Merch(
-				new Sku(1234),
-				new Name("Name"),
-				MerchType.Notepad,
-				id: 2);
+				2,
+				Sku.Create(1234),
+				Name.Create("Name"),
+				MerchType.Notepad);
 
 			var result = sut.HasIssuedMerch(merch, DateTimeOffset.UtcNow);
 
@@ -108,15 +108,15 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 		[InlineData(400)]
 		public void HasIssuedMerchToEmployeeWithIssuedMerch1YearAndMoreAgo365DaysInYear(int daysCount)
 		{
-			var sut = new Employee(ClothingSize.L, new Email(""));
+			var sut = new Employee(ClothingSize.L, Email.Create("test@ozon.ru"));
 			var merchIssuedDate = new DateTimeOffset(new DateTime(2021, 01, 01), TimeSpan.Zero);
 			var issuedMerch = new Merch(
-				new Sku(123),
-				new Name("Name"),
+				Sku.Create(123),
+				Name.Create("Name"),
 				MerchType.Notepad);
 			sut.IssuedMerches = new HashSet<IssuedMerch>
 			{
-				new (merchIssuedDate, new Quantity(1), Status.Issued, issuedMerch, sut)
+				new (merchIssuedDate, Quantity.Create(1), Status.Issued, issuedMerch, sut)
 			};
 
 			var result = sut.HasIssuedMerch(issuedMerch, merchIssuedDate.AddDays(daysCount));
@@ -129,15 +129,15 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 		[InlineData(400)]
 		public void HasIssuedMerchToEmployeeWithIssuedMerch1YearAndMoreAgo366DaysInYear(int daysCount)
 		{
-			var sut = new Employee(ClothingSize.L, new Email(""));
+			var sut = new Employee(ClothingSize.L, Email.Create("test@ozon.ru"));
 			var merchIssuedDate = new DateTimeOffset(new DateTime(2020, 01, 01), TimeSpan.Zero);
 			var issuedMerch = new Merch(
-				new Sku(123),
-				new Name("Name"),
+				Sku.Create(123),
+				Name.Create("Name"),
 				MerchType.Notepad);
 			sut.IssuedMerches = new HashSet<IssuedMerch>
 			{
-				new (merchIssuedDate, new Quantity(1), Status.Issued, issuedMerch, sut)
+				new (merchIssuedDate, Quantity.Create(1), Status.Issued, issuedMerch, sut)
 			};
 
 			var result = sut.HasIssuedMerch(issuedMerch, merchIssuedDate.AddDays(daysCount));
@@ -151,15 +151,15 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 		[InlineData(300)]
 		public void AddIssuedMerchToEmployeeWithIssuedMerchLessThan1YearAgo365DaysInYear(int daysCount)
 		{
-			var sut = new Employee(ClothingSize.L, new Email(""));
+			var sut = new Employee(ClothingSize.L, Email.Create("test@ozon.ru"));
 			var merchIssuedDate = new DateTimeOffset(new DateTime(2021, 01, 01), TimeSpan.Zero);
 			var issuedMerch = new Merch(
-				new Sku(123),
-				new Name("Name"),
+				Sku.Create(123),
+				Name.Create("Name"),
 				MerchType.Notepad);
 			sut.IssuedMerches = new HashSet<IssuedMerch>
 			{
-				new (merchIssuedDate, new Quantity(1), Status.Issued, issuedMerch, sut)
+				new (merchIssuedDate, Quantity.Create(1), Status.Issued, issuedMerch, sut)
 			};
 
 			var result = sut.HasIssuedMerch(issuedMerch, merchIssuedDate.AddDays(daysCount));
@@ -174,15 +174,15 @@ namespace OzonEdu.MerchandiseService.Domain.Tests
 		[InlineData(300)]
 		public void HasIssuedMerchToEmployeeWithIssuedMerchLessThan1YearAgo366DaysInYear(int daysCount)
 		{
-			var sut = new Employee(ClothingSize.L, new Email(""));
+			var sut = new Employee(ClothingSize.L, Email.Create("test@ozon.ru"));
 			var merchIssuedDate = new DateTimeOffset(new DateTime(2020, 01, 01), TimeSpan.Zero);
 			var issuedMerch = new Merch(
-				new Sku(123),
-				new Name("Name"),
+				Sku.Create(123),
+				Name.Create("Name"),
 				MerchType.Notepad);
 			sut.IssuedMerches = new HashSet<IssuedMerch>
 			{
-				new (merchIssuedDate, new Quantity(1), Status.Issued, issuedMerch, sut)
+				new (merchIssuedDate, Quantity.Create(1), Status.Issued, issuedMerch, sut)
 			};
 
 			var result = sut.HasIssuedMerch(issuedMerch, merchIssuedDate.AddDays(daysCount));

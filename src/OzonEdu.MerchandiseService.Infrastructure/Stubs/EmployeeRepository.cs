@@ -23,9 +23,9 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
 		}
 
 		/// <inheritdoc />
-		public Task<Employee?> FindByIdAsync(int entityId, CancellationToken ct = default)
+		public Task<Employee?> FindByIdAsync(long entityId, CancellationToken ct = default)
 		{
-			return Task.FromResult(new Employee(ClothingSize.L, new Email("employee1@ozon.ru")))!;
+			return Task.FromResult(new Employee(ClothingSize.L, Email.Create("employee1@ozon.ru")))!;
 		}
 
 		/// <inheritdoc />

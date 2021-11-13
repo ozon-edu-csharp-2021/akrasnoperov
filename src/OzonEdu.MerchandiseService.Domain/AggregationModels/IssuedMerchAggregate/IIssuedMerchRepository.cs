@@ -17,7 +17,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.IssuedMerchAggrega
 		/// <param name="ct">Токен для отмены операции <see cref="CancellationToken"/></param>
 		/// <returns>Список сущностей <see cref="IssuedMerch"/>.</returns>
 		Task<IReadOnlyCollection<IssuedMerch>> GetIssuedMerches(
-			int employeeId,
+			long employeeId,
 			CancellationToken ct = default);
 	}
 }

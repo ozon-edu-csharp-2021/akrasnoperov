@@ -21,7 +21,7 @@ namespace OzonEdu.MerchandiseService.Domain.Contracts
 		/// <param name="ct">Токен для отмены операции <see cref="CancellationToken"/></param>
 		/// <returns>Существующая сущность <see cref="TAggregationRoot"/>.</returns>
 		Task<TAggregationRoot?> FindByIdAsync(
-			int entityId,
+			long entityId,
 			CancellationToken ct = default);
 
 		/// <summary>

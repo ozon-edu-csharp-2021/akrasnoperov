@@ -39,14 +39,24 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate
 		/// .ctor
 		/// </summary>
 		public Merch(
+			long id,
 			Sku sku,
 			Name name,
 			MerchType merchType,
-			ClothingSize? clothingSize = null,
-			int? id = null)
+			ClothingSize? clothingSize = null) : this(sku, name, merchType, clothingSize)
 		{
-			// TODO: Просто заглушка. Убрать, когда подключим БД.
-			Id = id ?? new Random().Next(1, 10_000);
+			Id = id;
+		}
+
+		/// <summary>
+		/// .ctor
+		/// </summary>
+		public Merch(
+			Sku sku,
+			Name name,
+			MerchType merchType,
+			ClothingSize? clothingSize = null)
+		{
 			Sku = sku;
 			Name = name;
 			MerchType = merchType;

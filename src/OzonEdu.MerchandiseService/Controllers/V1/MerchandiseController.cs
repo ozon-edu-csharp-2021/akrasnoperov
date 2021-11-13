@@ -1,10 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using OzonEdu.MerchandiseService.Domain.Exceptions.EmployeeAggregate;
 using OzonEdu.MerchandiseService.HttpModels;
 using OzonEdu.MerchandiseService.Infrastructure.Commands.IssuedMerchAggregate;
 using OzonEdu.MerchandiseService.Infrastructure.Queries.IssuedMerchAggregate;
@@ -53,24 +51,10 @@ namespace OzonEdu.MerchandiseService.Controllers.V1
 				EmployeeId = employeeId,
 				Quantity = quantity
 			};
-			try
-			{
-				var issuedMerch = await _mediator.Send(command, ct);
-				var response = new IssueMerchResponse(issuedMerch.Status.Id);
-				return Ok(response);
-			}
-			catch (Exception ex)
-			{
-				switch (ex)
-				{
-					case IssueIssuedMerchException or WrongClothingSizeException:
-						return BadRequest(ex.Message);
-					case EntityNotFoundException:
-						return NotFound(ex.Message);
-					default:
-						throw;
-				}
-			}
+
+			var issuedMerch = await _mediator.Send(command, ct);
+			var response = new IssueMerchResponse(issuedMerch.Status.Id);
+			return Ok(response);
 		}
 
 		/// <summary>
@@ -83,7 +67,7 @@ namespace OzonEdu.MerchandiseService.Controllers.V1
 		[ProducesResponseType(typeof(IssuedMerchResponse), 200)]
 		[ProducesResponseType(404)]
 		public async Task<IActionResult> GetIssuedMerchAsync(
-			[FromRoute] int employeeId,
+			[FromRoute] long employeeId,
 			CancellationToken ct)
 		{
 			var query = new GetIssuedMerchQuery

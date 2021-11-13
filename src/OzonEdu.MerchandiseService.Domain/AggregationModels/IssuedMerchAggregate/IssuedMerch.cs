@@ -28,7 +28,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.IssuedMerchAggrega
 		/// <summary>
 		/// Идентификатор <see cref="Merch"/>.
 		/// </summary>
-		public int MerchId { get; set; }
+		public long MerchId { get; set; }
 
 		/// <summary>
 		/// <see cref="MerchAggregate.Merch"/>.
@@ -38,7 +38,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.IssuedMerchAggrega
 		/// <summary>
 		/// Идентификатор <see cref="Employee"/>.
 		/// </summary>
-		public int EmployeeId { get; set; }
+		public long EmployeeId { get; set; }
 
 		/// <summary>
 		/// <see cref="EmployeeAggregate.Employee"/>.

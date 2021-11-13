@@ -44,18 +44,18 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.IssuedMerchAggregat
 				// TODO: Получить из сервиса employee-service информацию о сотруднике по идентификатору, записать в БД нового сотрудника.
 				// Если такого сотрудника нет, выбросить исключение.
 				employee = await _employeeRepository.CreateAsync(
-					new Employee(ClothingSize.L, new Email("email@ozon.ru")),
+					new Employee(ClothingSize.L, Email.Create("email@ozon.ru")),
 					cancellationToken);
 				await _employeeRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
 			}
 
-			var merch = await _merchRepository.FindBySkuAsync(new Sku(request.Sku), cancellationToken);
+			var merch = await _merchRepository.FindBySkuAsync(Sku.Create(request.Sku), cancellationToken);
 			if (merch is null)
 			{
 				// TODO: Получить из сервиса stock-api информацию о товаре по SKU, записать в БД новый мерч.
 				// Если такого товара нет, выбросить исключение.
 				merch = await _merchRepository.CreateAsync(
-					new Merch(new Sku(request.Sku), new Name("ПОЛУЧЕННОЕ_ИМЯ"), MerchType.Bag),
+					new Merch(Sku.Create(request.Sku), Name.Create("ПОЛУЧЕННОЕ_ИМЯ"), MerchType.Bag),
 					cancellationToken);
 				await _merchRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
 			}
@@ -78,7 +78,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.IssuedMerchAggregat
 			var result = await _issuedMerchRepository.CreateAsync(
 				new IssuedMerch(
 					utcNow,
-					new Quantity(request.Quantity),
+					Quantity.Create(request.Quantity),
 					status,
 					merch,
 					employee),

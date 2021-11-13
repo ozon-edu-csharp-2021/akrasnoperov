@@ -26,7 +26,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
 		}
 
 		/// <inheritdoc />
-		public Task<IssuedMerch?> FindByIdAsync(int entityId, CancellationToken ct = default)
+		public Task<IssuedMerch?> FindByIdAsync(long entityId, CancellationToken ct = default)
 		{
 			throw new System.NotImplementedException();
 		}
@@ -45,26 +45,26 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
 
 		/// <inheritdoc />
 		public Task<IReadOnlyCollection<IssuedMerch>> GetIssuedMerches(
-			int employeeId,
+			long employeeId,
 			CancellationToken ct = default)
 		{
-			var employee = new Employee(ClothingSize.L, new Email("email@ozon.ru"));
+			var employee = new Employee(ClothingSize.L, Email.Create("email@ozon.ru"));
 			return Task.FromResult<IReadOnlyCollection<IssuedMerch>>(new List<IssuedMerch>
 			{
 				new (new DateTimeOffset(new DateTime(2021, 01, 01), TimeSpan.FromHours(3)),
-					new Quantity(1),
+					Quantity.Create(1),
 					Status.Issued,
-					new Merch(new Sku(12), new Name("Мерч 1"), MerchType.Notepad),
+					new Merch(2, Sku.Create(12), Name.Create("Мерч_1"), MerchType.Notepad),
 					employee),
 				new (new DateTimeOffset(new DateTime(2021, 01, 01), TimeSpan.FromHours(3)),
-					new Quantity(3),
+					Quantity.Create(3),
 					Status.Issued,
-					new Merch(new Sku(13), new Name("Мерч 2"), MerchType.Notepad),
+					new Merch(3, Sku.Create(13), Name.Create("Мерч_2"), MerchType.Notepad),
 					employee),
 				new (new DateTimeOffset(new DateTime(2021, 07, 05), TimeSpan.FromHours(3)),
-					new Quantity(1),
+					Quantity.Create(1),
 					Status.ReadyToIssue,
-					new Merch(new Sku(14), new Name("Мерч 3"), MerchType.Bag),
+					new Merch(4, Sku.Create(14), Name.Create("Мерч_3"), MerchType.Bag),
 					employee)
 			});
 		}

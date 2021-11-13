@@ -1,5 +1,8 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.IssuedMerchAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate;
+using OzonEdu.MerchandiseService.Infrastructure.Extensions;
 
 namespace OzonEdu.MerchandiseService.Infrastructure.Commands.IssuedMerchAggregate
 {
@@ -22,5 +25,21 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Commands.IssuedMerchAggregat
 		/// Количество мерча для выдачи.
 		/// </summary>
 		public int Quantity { get; set; }
+	}
+
+	/// <summary>
+	/// Валидатор <see cref="AbstractValidator{IssueMerchCommand}"/>
+	/// для <see cref="IssueMerchCommand"/>.
+	/// </summary>
+	public class IssueMerchCommandValidator : AbstractValidator<IssueMerchCommand>
+	{
+		/// <summary>
+		/// .ctor
+		/// </summary>
+		public IssueMerchCommandValidator()
+		{
+			RuleFor(x => x.Sku).MustBeValidObject(Sku.Create);
+			RuleFor(x => x.Quantity).MustBeValidObject(Quantity.Create);
+		}
 	}
 }

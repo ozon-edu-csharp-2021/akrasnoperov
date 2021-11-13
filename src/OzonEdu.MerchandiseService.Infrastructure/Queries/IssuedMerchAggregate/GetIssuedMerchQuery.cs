@@ -12,6 +12,6 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Queries.IssuedMerchAggregate
 		/// <summary>
 		/// Идентификатор сотрудника.
 		/// </summary>
-		public int EmployeeId { get; set; }
+		public long EmployeeId { get; set; }
 	}
 }
