@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate;
 using OzonEdu.MerchandiseService.Domain.Contracts;
@@ -43,6 +44,19 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Stubs
 		public Task<Merch?> FindBySkuAsync(Sku sku, CancellationToken ct = default)
 		{
 			return Task.FromResult<Merch?>(new Merch(1, sku, Name.Create("Супер_ручка"), MerchType.Pen));
+		}
+
+		/// <inheritdoc />
+		public Task<IReadOnlyDictionary<Merch, int>> GetMerchPackComposition(
+			MerchPackType merchPackType,
+			ClothingSize employeeClothingSize,
+			CancellationToken ct = default)
+		{
+			return Task.FromResult<IReadOnlyDictionary<Merch, int>>(new Dictionary<Merch, int>
+			{
+				{ new Merch(1, Sku.Create(123), Name.Create("Супер_ручка"), MerchType.Pen), 3 },
+				{ new Merch(2, Sku.Create(124), Name.Create("Супер_футболка"), MerchType.TShirt, employeeClothingSize), 2 }
+			});
 		}
 	}
 }

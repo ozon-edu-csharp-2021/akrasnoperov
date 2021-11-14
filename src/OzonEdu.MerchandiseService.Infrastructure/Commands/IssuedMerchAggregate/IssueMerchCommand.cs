@@ -28,7 +28,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Commands.IssuedMerchAggregat
 	}
 
 	/// <summary>
-	/// Валидатор <see cref="AbstractValidator{IssueMerchCommand}"/>
+	/// Валидатор <see cref="AbstractValidator{T}"/>
 	/// для <see cref="IssueMerchCommand"/>.
 	/// </summary>
 	public class IssueMerchCommandValidator : AbstractValidator<IssueMerchCommand>
@@ -38,8 +38,9 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Commands.IssuedMerchAggregat
 		/// </summary>
 		public IssueMerchCommandValidator()
 		{
-			RuleFor(x => x.Sku).MustBeValidObject(Sku.Create);
-			RuleFor(x => x.Quantity).MustBeValidObject(Quantity.Create);
+			RuleFor(_ => _.EmployeeId).GreaterThan(0).WithMessage("EmployeeId should be more than 0");
+			RuleFor(_ => _.Sku).MustBeValidObject(Sku.Create);
+			RuleFor(_ => _.Quantity).MustBeValidObject(Quantity.Create);
 		}
 	}
 }

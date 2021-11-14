@@ -13,37 +13,37 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.IssuedMerchAggrega
 		/// <summary>
 		/// Дата и время выдачи мерча.
 		/// </summary>
-		public DateTimeOffset IssueDate { get; set; }
+		public DateTimeOffset IssueDate { get; }
 
 		/// <summary>
 		/// <see cref="IssuedMerchAggregate.Quantity"/>.
 		/// </summary>
-		public Quantity Quantity { get; set; }
+		public Quantity Quantity { get; }
 
 		/// <summary>
 		/// <see cref="IssuedMerchAggregate.Status"/>.
 		/// </summary>
-		public Status Status { get; set; }
+		public Status Status { get; }
 
 		/// <summary>
 		/// Идентификатор <see cref="Merch"/>.
 		/// </summary>
-		public long MerchId { get; set; }
+		public long MerchId { get; }
 
 		/// <summary>
 		/// <see cref="MerchAggregate.Merch"/>.
 		/// </summary>
-		public Merch Merch { get; set; }
+		public Merch Merch { get; }
 
 		/// <summary>
 		/// Идентификатор <see cref="Employee"/>.
 		/// </summary>
-		public long EmployeeId { get; set; }
+		public long EmployeeId { get; }
 
 		/// <summary>
 		/// <see cref="EmployeeAggregate.Employee"/>.
 		/// </summary>
-		public Employee Employee { get; set; }
+		public Employee Employee { get; }
 
 		/// <summary>
 		/// .ctor
