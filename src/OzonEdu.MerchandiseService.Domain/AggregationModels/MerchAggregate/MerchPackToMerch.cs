@@ -1,4 +1,5 @@
-﻿using OzonEdu.MerchandiseService.Domain.AggregationModels.IssuedMerchAggregate;
+﻿using System;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.IssuedMerchAggregate;
 using OzonEdu.MerchandiseService.Domain.Models;
 
 namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate
@@ -32,9 +33,9 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate
 			Merch merch,
 			MerchPack merchPack)
 		{
-			Quantity = quantity;
-			Merch = merch;
-			MerchPack = merchPack;
+			Quantity = quantity ?? throw new ArgumentNullException(nameof(quantity), "quantity should not be null");
+			Merch = merch ?? throw new ArgumentNullException(nameof(merch), "merch should not be null");
+			MerchPack = merchPack ?? throw new ArgumentNullException(nameof(merchPack), "merchPack should not be null");
 		}
 	}
 }

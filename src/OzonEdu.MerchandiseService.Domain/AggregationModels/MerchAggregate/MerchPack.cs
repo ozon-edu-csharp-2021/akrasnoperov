@@ -15,6 +15,16 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate
 		/// <summary>
 		/// .ctor
 		/// </summary>
+		public MerchPack(
+			long id,
+			Name name) : this(name)
+		{
+			Id = id;
+		}
+
+		/// <summary>
+		/// .ctor
+		/// </summary>
 		public MerchPack(Name name)
 		{
 			Name = name;
