@@ -61,7 +61,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate
 			DateTimeOffset issueDate)
 		{
 			var issuedMerch = IssuedMerches
-				.Where(_ => _.MerchId == merch.Id)
+				.Where(_ => _.Merch.Id == merch.Id)
 				.OrderByDescending(_ => _.IssueDate)
 				.FirstOrDefault();
 			if (issuedMerch is null)

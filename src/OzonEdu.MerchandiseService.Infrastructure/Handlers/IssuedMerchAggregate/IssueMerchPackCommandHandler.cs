@@ -63,6 +63,7 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.IssuedMerchAggregat
 				cancellationToken);
 
 			var result = new List<IssuedMerch>();
+			var tasks = new List<Task<IssuedMerch>>();
 			foreach (var (merch, quantity) in merchesToIssue)
 			{
 				var command = new IssueMerchCommand
@@ -71,8 +72,14 @@ namespace OzonEdu.MerchandiseService.Infrastructure.Handlers.IssuedMerchAggregat
 					EmployeeId = request.EmployeeId,
 					Sku = merch.Sku.Value
 				};
-				var issuedMerch = await _mediator.Send(command, cancellationToken);
-				result.Add(issuedMerch);
+				tasks.Add(_mediator.Send(command, cancellationToken));
+			}
+
+			await Task.WhenAll(tasks);
+
+			foreach (var task in tasks)
+			{
+				result.Add(await task);
 			}
 
 			return result;

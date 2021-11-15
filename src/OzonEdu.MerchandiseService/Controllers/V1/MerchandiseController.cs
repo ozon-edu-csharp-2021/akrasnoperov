@@ -77,7 +77,7 @@ namespace OzonEdu.MerchandiseService.Controllers.V1
 			var issuedMerches = await _mediator.Send(query, ct);
 
 			var result = new IssuedMerchResponse(issuedMerches
-				.Select(_ => new IssuedMerch(_.MerchId, _.Quantity.Value, _.IssueDate)).ToList());
+				.Select(_ => new IssuedMerch(_.Merch.Id, _.Quantity.Value, _.IssueDate)).ToList());
 
 			return Ok(result);
 		}

@@ -15,19 +15,9 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate
 		public Quantity Quantity { get; }
 
 		/// <summary>
-		/// Идентификатор <see cref="Merch"/>.
-		/// </summary>
-		public long MerchId { get; }
-
-		/// <summary>
 		/// <see cref="MerchAggregate.Merch"/>.
 		/// </summary>
 		public Merch Merch { get; }
-
-		/// <summary>
-		/// Идентификатор <see cref="MerchPack"/>.
-		/// </summary>
-		public long MerchPackId { get; }
 
 		/// <summary>
 		/// <see cref="MerchAggregate.MerchPack"/>.
@@ -43,9 +33,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate
 			MerchPack merchPack)
 		{
 			Quantity = quantity;
-			MerchId = merch.Id;
 			Merch = merch;
-			MerchPackId = merchPack.Id;
 			MerchPack = merchPack;
 		}
 	}

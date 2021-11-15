@@ -26,19 +26,9 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.IssuedMerchAggrega
 		public Status Status { get; }
 
 		/// <summary>
-		/// Идентификатор <see cref="Merch"/>.
-		/// </summary>
-		public long MerchId { get; }
-
-		/// <summary>
 		/// <see cref="MerchAggregate.Merch"/>.
 		/// </summary>
 		public Merch Merch { get; }
-
-		/// <summary>
-		/// Идентификатор <see cref="Employee"/>.
-		/// </summary>
-		public long EmployeeId { get; }
 
 		/// <summary>
 		/// <see cref="EmployeeAggregate.Employee"/>.
@@ -58,9 +48,7 @@ namespace OzonEdu.MerchandiseService.Domain.AggregationModels.IssuedMerchAggrega
 			IssueDate = issueDate;
 			Quantity = quantity;
 			Status = status;
-			MerchId = merch.Id;
 			Merch = merch;
-			EmployeeId = employee.Id;
 			Employee = employee;
 		}
 	}
