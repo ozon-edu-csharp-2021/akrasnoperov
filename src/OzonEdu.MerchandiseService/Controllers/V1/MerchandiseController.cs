@@ -1,8 +1,11 @@
-﻿using System;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OzonEdu.MerchandiseService.HttpModels;
+using OzonEdu.MerchandiseService.Infrastructure.Commands.IssuedMerchAggregate;
+using OzonEdu.MerchandiseService.Infrastructure.Queries.IssuedMerchAggregate;
 
 namespace OzonEdu.MerchandiseService.Controllers.V1
 {
@@ -14,39 +17,69 @@ namespace OzonEdu.MerchandiseService.Controllers.V1
 	[Produces("application/json")]
 	public class MerchandiseController : ControllerBase
 	{
+		private readonly IMediator _mediator;
+
 		/// <summary>
-		/// Запрашивает мерч по <paramref name="merchId"/>
-		/// для выдачи сотруднику <paramref name="userId"/>.
+		/// .ctor
 		/// </summary>
-		/// <param name="merchId">Идентификатор мерча.</param>
-		/// <param name="userId">Идентификатор пользователя.</param>
-		/// <param name="token"><see cref="CancellationToken"/>.</param>
-		[HttpPost("{merchId:int}/users/{userId:int}")]
-		[ProducesResponseType(204)]
+		public MerchandiseController( IMediator mediator)
+		{
+			_mediator = mediator;
+		}
+
+		/// <summary>
+		/// Запрашивает мерч по <paramref name="sku"/>
+		/// для выдачи сотруднику <paramref name="employeeId"/>.
+		/// </summary>
+		/// <param name="sku">Идентификатор товара на складе.</param>
+		/// <param name="employeeId">Идентификатор пользователя.</param>
+		/// <param name="quantity">Количество мерча для выдачи.</param>
+		/// <param name="ct"><see cref="CancellationToken"/>.</param>
+		[HttpPost("{sku:long}/users/{employeeId:int}")]
+		[ProducesResponseType(typeof(IssueMerchResponse), 200)]
 		[ProducesResponseType(400)]
 		[ProducesResponseType(404)]
-		public Task<IActionResult> IssueMerchAsync(
-			[FromRoute] int merchId,
-			[FromRoute] int userId,
-			CancellationToken token)
+		public async Task<IActionResult> IssueMerchAsync(
+			[FromRoute] long sku,
+			[FromRoute] int employeeId,
+			[FromQuery] int quantity,
+			CancellationToken ct)
 		{
-			throw new NotImplementedException();
+			var command = new IssueMerchCommand
+			{
+				Sku = sku,
+				EmployeeId = employeeId,
+				Quantity = quantity
+			};
+
+			var issuedMerch = await _mediator.Send(command, ct);
+			var response = new IssueMerchResponse(issuedMerch.Status.Id);
+			return Ok(response);
 		}
 
 		/// <summary>
 		/// Возвращает информацию о выданном сотруднику мерче.
 		/// </summary>
-		/// <param name="userId">Идентификатор пользователя.</param>
-		/// <param name="token"><see cref="CancellationToken"/>.</param>
+		/// <param name="employeeId">Идентификатор пользователя.</param>
+		/// <param name="ct"><see cref="CancellationToken"/>.</param>
 		/// <returns>Список <see cref="IssuedMerch"/></returns>
-		[HttpGet("users/{userId:int}")]
+		[HttpGet("users/{employeeId:int}")]
 		[ProducesResponseType(typeof(IssuedMerchResponse), 200)]
 		[ProducesResponseType(404)]
-		public Task<IActionResult> GetIssuedMerchAsync(
-			[FromRoute] int userId,
-			CancellationToken token)
+		public async Task<IActionResult> GetIssuedMerchAsync(
+			[FromRoute] long employeeId,
+			CancellationToken ct)
 		{
-			throw new NotImplementedException();
+			var query = new GetIssuedMerchQuery
+			{
+				EmployeeId = employeeId
+			};
+			var issuedMerches = await _mediator.Send(query, ct);
+
+			var result = new IssuedMerchResponse(issuedMerches
+				.Select(_ => new IssuedMerch(_.Merch.Id, _.Quantity.Value, _.IssueDate)).ToList());
+
+			return Ok(result);
 		}
 	}
 }

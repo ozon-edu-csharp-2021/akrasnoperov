@@ -1,8 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using OzonEdu.MerchandiseService.Infrastructure.Interceptors;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.EmployeeAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.IssuedMerchAggregate;
+using OzonEdu.MerchandiseService.Domain.AggregationModels.MerchAggregate;
+using OzonEdu.MerchandiseService.Domain.Contracts;
 using OzonEdu.MerchandiseService.GrpcServices;
+using OzonEdu.MerchandiseService.Infrastructure.Stubs;
 
 namespace OzonEdu.MerchandiseService
 {
@@ -17,7 +21,10 @@ namespace OzonEdu.MerchandiseService
 		/// <param name="services"><see cref="IServiceCollection"/>.</param>
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddGrpc(options => options.Interceptors.Add<LoggingInterceptor>());
+			services.AddTransient<IIssuedMerchRepository, IssuedMerchRepository>();
+			services.AddTransient<IEmployeeRepository, EmployeeRepository>();
+			services.AddTransient<IMerchRepository, MerchRepository>();
+			services.AddTransient<IUnitOfWork, UnitOfWork>();
 		}
 
 		/// <summary>
